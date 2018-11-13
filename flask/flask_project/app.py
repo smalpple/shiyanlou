@@ -14,6 +14,7 @@ def user_index(username):
         abort(404)
     return render_template('user_index.html',username=username)
 
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error.html'),404
