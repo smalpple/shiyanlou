@@ -16,18 +16,19 @@ def get_articleList():
                 pdf_json = loads(f.read())
                 article_list.append(pdf_json)
     return article_list
+
 @app.route('/')
 def index():
     # 显示文章名称的列表
     # 也就是 /home/shiyanlou/files/ 目录下所有 json 文件中的 `title` 信息列表
     article_list = get_articleList()
-    file_name = os.listdir('.')
-    for i in file_name:
-        if i.split(".")[-1] == 'json':
-            with open(i,'rb') as f:
-                pdf_json = loads(f.read())
-                article_list.append(pdf_json)
-    return render_template('index.html', pdf_fileTitle=article_list)
+    # file_name = os.listdir('.')
+    # for i in file_name:
+    #     if i.split(".")[-1] == 'json':
+    #         with open(i,'rb') as f:
+    #             pdf_json = loads(f.read())
+    #             article_list.append(pdf_json)
+    return render_template('index.html', article_list=article_list)
 
 
 
@@ -44,7 +45,9 @@ def file(filename):
     if filename not in article_title :
         abort(404)
     else:
-        return "test"
+        for i in article_list:
+            if filename == i["title"]:
+                return render_template('file.html', article_list=i)
 
 
 @app.errorhandler(404)
@@ -53,4 +56,5 @@ def not_found(error):
 
 if __name__ == '__main__':
     app.run(debug=True)
-    #index()
+    # # #index()
+    # print(get_articleList())
