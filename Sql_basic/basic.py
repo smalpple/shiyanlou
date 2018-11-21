@@ -1,9 +1,16 @@
 from sqlalchemy import create_engine,Column, Integer, String,ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker,relationship
+import logging
+from logging import debug,info,warning,error,critical
+logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',
+                    level=logging.DEBUG)
+
 
 engine = create_engine('mysql://biyong:Biyong12315.@140.143.207.54:3306/shiyanlou',echo=True)
 Base = declarative_base()
+Session = sessionmaker(bind=engine)
+session = Session()
 #print(engine.execute('select * from user join course on course.teacher_id = user.id ').fetchall())
 
 class User(Base):
@@ -38,8 +45,7 @@ class Lab(Base):
 if __name__ == '__main__':
 
     Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
+
     #print(session.query(User).filter(User.name=='by').first())
 
     '''
@@ -48,18 +54,18 @@ if __name__ == '__main__':
     course = session.query(Course).first()
     lab1 = Lab(name='ORM Basic',course_id=course.id)
     lab2 = Lab(name='guanxi sql',course=course)
-    # session.add(lab1)
-    # session.add(lab2)
-    # session.commit()
+    session.add(lab1)
+    session.add(lab2)
+    session.commit()
     #print(course.labs)
 
-    '''
-    更新
-    '''
-    course.name = 'Pyhton fenixi'
-    session.add(course)
-    session.commit()
-    print("====",lab1.course)
-    print("====",lab2.course)
-    print("====",session.query(Course).all())
+    # '''
+    # 更新
+    # '''
+    # course.name = 'Pyhton fenixi'
+    # session.add(course)
+    # session.commit()
+    # print("====",lab1.course)
+    # print("====",lab2.course)
+    # print("====",session.query(Course).all())
     session.close()
